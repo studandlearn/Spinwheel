@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin Wheel</title>
+    <style>
+        .wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 50px auto;
+        }
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: absolute;
+            transition: transform 3s ease-out;
+        }
+        .button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="wheel-container">
+        <img id="wheel" class="wheel" src="wheel.png" alt="Spin Wheel">
+    </div>
+    <button class="button" onclick="spinWheel()">Spin</button>
+
+    <script>
+        let limitedSectionCount = 0;
+        const maxLimitedSection = 2;
+        const maxTotalSpins = 27;
+        let totalSpins = 0;
+        const sections = ["A", "B"]; // A is the rare section
+        const links = {"A": "https://example.com/a", "B": "https://example.com/b"};
+
+        function spinWheel() {
+            if (totalSpins >= maxTotalSpins) {
+                alert("Semua peluang telah digunakan");
+                return;
+            }
+            
+            let chosenSection;
+            if (limitedSectionCount < maxLimitedSection) {
+                chosenSection = Math.random() < (2 / (27 - totalSpins)) ? "A" : "B";
+            } else {
+                chosenSection = "B";
+            }
+            
+            if (chosenSection === "A") {
+                limitedSectionCount++;
+            }
+            totalSpins++;
+            
+            const angle = chosenSection === "A" ? 180 : 0;
+            document.getElementById("wheel").style.transform = `rotate(${angle}deg)`;
+            
+            setTimeout(() => {
+                window.location.href = links[chosenSection];
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
