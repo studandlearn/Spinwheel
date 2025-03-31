@@ -38,8 +38,8 @@
         const maxLimitedSection = 2;
         const maxTotalSpins = 27;
         let totalSpins = 0;
-        const sections = ["A", "B"]; // A is the rare section
-        const links = {"A": "https://example.com/a", "B": "https://example.com/b"};
+        const sections = ["RM10", "RM1"]; // RM10 is the rare section
+        const links = {"RM10": "https://example.com/rm10", "RM1": "https://example.com/rm1"};
 
         function spinWheel() {
             if (totalSpins >= maxTotalSpins) {
@@ -49,18 +49,18 @@
             
             let chosenSection;
             if (limitedSectionCount < maxLimitedSection) {
-                chosenSection = Math.random() < (2 / (27 - totalSpins)) ? "A" : "B";
+                chosenSection = Math.random() < (2 / (27 - totalSpins)) ? "RM10" : "RM1";
             } else {
-                chosenSection = "B";
+                chosenSection = "RM1";
             }
             
-            if (chosenSection === "A") {
+            if (chosenSection === "RM10") {
                 limitedSectionCount++;
             }
             totalSpins++;
             
-            const angle = chosenSection === "A" ? 180 : 0;
-            document.getElementById("wheel").style.transform = `rotate(${angle}deg)`;
+            const randomRotation = 360 * 5 + (chosenSection === "RM10" ? 180 : 0);
+            document.getElementById("wheel").style.transform = `rotate(${randomRotation}deg)`;
             
             setTimeout(() => {
                 window.location.href = links[chosenSection];
