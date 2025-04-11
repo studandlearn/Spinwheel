@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spin Wheel</title>
     <link rel="stylesheet" href="https://spin-and-win.securetools.in/assets/bootstrap.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDRiKYjVNpHz1z4UZaQAWnovF0v5thqAew",
+      authDomain: "raya-8e254.firebaseapp.com",
+      databaseURL: "https://raya-8e254-default-rtdb.firebaseio.com",
+      projectId: "raya-8e254",
+      storageBucket: "raya-8e254.firebasestorage.app",
+      messagingSenderId: "18685802178",
+      appId: "1:18685802178:web:908f987fb3592b329d2d5b"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
     <style>
         * {
             margin: 0;
@@ -352,11 +366,10 @@
                   </div> : <div class="text-danger bg-white px-1 mini-sec box">00</div>
                   <p></p>
               </div>
-              <button class="claim btn btn-rounded" onclick="redirect(true)">CLICK HERE</button>
+              <button class="claim btn btn-rounded" onclick="redirect()">CLICK HERE</button>
       </div>
   </div>
   <script>
-  
    // Function to get the "ref" parameter from the URL
   function getQueryParameter(param) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -364,11 +377,26 @@
   }
 
   let currentAngle = 0;
-  let alreadyRedirected = false;
+  const allowedSpins = {
+  2250: 2, // max 2 times
+  3575: 1  // max 1 time
+};
 
 function spin() {
-    const positions = [950, 2250, 3575];
-    currentAngle = positions[Math.floor(Math.random() * positions.length)];
+    firebase.database().ref('spinCount').once('value').then(snapshot => {
+    const spinData = snapshot.val() || {};
+
+    const availableAngles = [950, 2250, 3575].filter(angle => {
+      const used = spinData[angle] || 0;
+      return used < (allowedSpins[angle] || Infinity);
+    });
+
+    if (availableAngles.length === 0) {
+      alert("All rewards have been claimed!");
+      return;
+    }
+    const randomAngle = availableAngles[Math.floor(Math.random() * availableAngles.length)];
+    currentAngle = randomAngle;
           document.querySelector('.inner').style.transition = 'transform 4s ease-out'; 
           document.querySelector('.inner').style.transform = `rotate(${currentAngle + 3080}deg)`; 
           document.querySelector('.hand').style.display = "none";
@@ -377,21 +405,27 @@ function spin() {
 
           setTimeout(() => {
               document.getElementById('canvas').style.display = 'block'
-              balance();
           }, 4000);
           setTimeout(() => {
               var popup = document.querySelector('.popup');
               document.querySelector('.popup-con').classList.replace('d-none', 'd-flex');
               popup.classList.add('swipe-up');
               timer();
-              redirect();
+              // Step 4: Save spin result
+      const timestamp = Date.now();
+      firebase.database().ref('spinResults/' + timestamp).set({
+        prizeAngle: currentAngle,
+        timestamp: new Date().toISOString()
+      });
+
+      // Step 5: Update spinCount
+      const currentCount = spinData[currentAngle] || 0;
+      firebase.database().ref('spinCount/' + currentAngle).set(currentCount + 1);
           }, 5000);
-      }
+      });
+    }
 
-      function redirect(immediate = false) {
-        if (alreadyRedirected) return; // ⛔ Halang kalau dah redirect sebelum ni
-        alreadyRedirected = true;      // ✅ Set flag supaya tak ulang
-
+      function redirect() {
     const ref = getQueryParameter("ref");
     const bonus = getQueryParameter("bonus");
 
@@ -407,42 +441,10 @@ function spin() {
         // fallback kalau tak match
         redirectUrl = `claim.php?id=${ref || 'default'}&nf=${bonus || 'default'}`;
     }
-
-    if (immediate) {
-        // 👉 If user click button: redirect terus
-        window.location.href = redirectUrl;
-    } else {
-        // 👉 If auto (lepas spin): delay 5s
-        setTimeout(() => {
+    setTimeout(() => {
             window.location.href = redirectUrl;
-        }, 5000);
-    }
-}
-
-      function balance() {
-          const balanceElement = document.querySelector('.balance');
-          let currentBalance = 0;
-          const targetBalance = 10000;
-          const duration = 1000; // 2 seconds
-          const incrementInterval = 10; // How often to update the balance (in milliseconds)
-          const totalIncrements = duration / incrementInterval; // Total number of increments
-          const incrementAmount = targetBalance / totalIncrements; // Amount to increment in each step
-
-          let countUp = setInterval(() => {
-              currentBalance += incrementAmount;
-
-              // Update the balance element with the formatted value
-              balanceElement.textContent = `₹ ${Math.floor(currentBalance)}`;
-
-              // Stop the interval when the balance reaches or exceeds the target amount
-              if (currentBalance >= targetBalance) {
-                  balanceElement.textContent = `₹ ${targetBalance}`; // Ensure final value is exactly 10000
-                  clearInterval(countUp);
-              }
-          }, incrementInterval);
-          document.querySelector('.balance-con').classList.add('zoom');
-      }
-
+        });
+ }
       function timer() {
           let minutes = 1;
           let seconds = 0;
