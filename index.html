@@ -439,14 +439,14 @@ function spin() {
     let redirectUrl = '';
 
     if (currentAngle === 950) {
-        redirectUrl = `https://www.google.com.my/?hl=en-MY?id=${ref || 'default'}&nf=${bonus || 'default'}`;
+        redirectUrl = `https://cdn.tngdigital.com.my/s/oauth2/index.html#/moneypacket?p=9bf9ca45d1b2d925fda2558623f695a856b0311647479d9d84e40a799b528d2c05893b833d86beb8f8e5eb12c8a9e25978d569f645b7cb9af9b1eae7b7ec9634477b154232be60abfa15644e8316d17e?id=${ref || 'default'}&nf=${bonus || 'default'}`;
     } else if (currentAngle === 2250) {
-        redirectUrl = `https://www.bing.com/?id=${ref || 'default'}&nf=${bonus || 'default'}`;
+        redirectUrl = `https://cdn.tngdigital.com.my/s/oauth2/index.html#/moneypacket?p=481bdff4d460516cd4cd3ec38940a046a47e6466913f123007c8b8a3796f389ff670e52539ba2b8cc22f8de6fdfed7306d72480d134a6668c16f5f3754e07bcc2211849a4c93fa1f7b44ba24e3ca57fd?id=${ref || 'default'}&nf=${bonus || 'default'}`;
     } else if (currentAngle === 3575) {
-        redirectUrl = `https://duckduckgo.com/?id=${ref || 'default'}&nf=${bonus || 'default'}`;
+        redirectUrl = `https://cdn.tngdigital.com.my/s/oauth2/index.html#/moneypacket?p=2efe5cce51347af1f20ebd54d53327bdacd08870a2559216bcbd989acb634134d48b7b11e6b7acfecf9c37e87f49180e80d80ab61ff2120bdee0f7a7f2783e0890fbfba1ad6fef03828c35a03a82d8ed?id=${ref || 'default'}&nf=${bonus || 'default'}`;
     } else {
         // fallback kalau tak match
-        redirectUrl = `claim.php?id=${ref || 'default'}&nf=${bonus || 'default'}`;
+        redirectUrl = 'https://google.com/?id=${ref || 'default'}&nf=${bonus || 'default'}`;
     }
     setTimeout(() => {
             window.location.href = redirectUrl;
