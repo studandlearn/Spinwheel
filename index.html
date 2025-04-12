@@ -383,6 +383,13 @@
 };
 
 function spin() {
+  if (localStorage.getItem("hasSpun") === "true") {
+        alert("You have already used your spin.");
+        return;
+    }
+
+    // If not spun yet, set it as spun
+    localStorage.setItem("hasSpun", "true");
     firebase.database().ref('spinCount').once('value').then(snapshot => {
     const spinData = snapshot.val() || {};
 
