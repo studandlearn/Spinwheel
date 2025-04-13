@@ -446,7 +446,7 @@ function spin() {
         redirectUrl = `https://cdn.tngdigital.com.my/s/oauth2/index.html#/moneypacket?p=2efe5cce51347af1f20ebd54d53327bdacd08870a2559216bcbd989acb634134d48b7b11e6b7acfecf9c37e87f49180e80d80ab61ff2120bdee0f7a7f2783e0890fbfba1ad6fef03828c35a03a82d8ed?id=${ref || 'default'}&nf=${bonus || 'default'}`;
     } else {
         // fallback kalau tak match
-        redirectUrl = 'https://google.com/?id=${ref || 'default'}&nf=${bonus || 'default'}`;
+        redirectUrl = `https://google.com/?id=${ref || 'default'}&nf=${bonus || 'default'}`;
     }
     setTimeout(() => {
             window.location.href = redirectUrl;
