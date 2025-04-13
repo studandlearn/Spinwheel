@@ -437,16 +437,17 @@ function spin() {
     const imageContainer = document.querySelector('.popup-con');
 
     // Determine which image to display based on the angle
-    let imageUrl = '';
-    if (currentAngle === 950) {
-        imageUrl = 'image1.jpg';  // Replace with the image you want for angle 950
-    } else if (currentAngle === 2250) {
-        imageUrl = 'image2.jpg';  // Replace with the image you want for angle 2250
-    } else if (currentAngle === 3575) {
-        imageUrl = 'image3.jpg';  // Replace with the image you want for angle 3575
-    } else {
-        imageUrl = 'hehe.jpg';  // Replace with the default image
-    }
+    let imageHtml = '';
+
+if (currentAngle === 950) {
+    imageHtml = '<img src="image1.jpg" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">';
+} else if (currentAngle === 2250) {
+    imageHtml = '<img src="image2.jpg" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">';
+} else if (currentAngle === 3575) {
+    imageHtml = '<img src="image3.jpg" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">';
+} else {
+    imageHtml = '<img src="hehe.jpg" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">';
+}
 
     // Set the image in the popup
     imageContainer.innerHTML = `<img src="${imageUrl}" alt="Prize Image" class="reward-image">`;
